@@ -3,7 +3,7 @@
 class M_hakakses extends CI_Model {
 
 	var $table = 'users';
-	var $pk = 'id';
+	var $pk = 'user_id';
 
 	public function __construct()
 	{
@@ -14,8 +14,9 @@ class M_hakakses extends CI_Model {
 	public function read(){
 		$this->db->select('*');
 		$this->db->from($this->table);
-		$this->db->join('groups', 'users.id_group = groups.id_group');
-		$this->db->where('status_user', '1');
+		$this->db->join('users_groups', 'users.user_id = users_groups.user_id');
+		$this->db->join('groups', 'users_groups.group_id = groups.id');
+		$this->db->where('active', '1');
 		$query = $this->db->get();
 		return $query->result_array();
 	}
@@ -27,8 +28,8 @@ class M_hakakses extends CI_Model {
 
 	public function delete($id)
     {	
-    	$data = array('status_user' => '0');
-    	$result = $this->db->update($this->table, $data, array('id' => $id));
+    	$data = array('active' => '0');
+    	$result = $this->db->update($this->table, $data, array('user_id' => $id));
     	return $result;
     }
 

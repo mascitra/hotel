@@ -34,7 +34,7 @@
                             <td><?=$no++?></td>
                             <td><?=$list['username']?></td>
                             <td><?=$list['email']?></td>
-                            <td><?=$list['name']?></td>
+                            <td><?=$list['description']?></td>
                             <td>
                                <button class="btn btn-warning btn-xs">Detail</button>
                                <button class="btn btn-success btn-xs">Ganti</button>
