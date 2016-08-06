@@ -21,8 +21,22 @@ class M_hakakses extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function create($object){
-		$create = $this->db->insert($this->table, $object);
+	public function read_groups(){
+		$query = $this->db->get('groups');
+		return $query->result_array();
+	}
+
+	public function create($data, $user_id, $id_group){
+		$create = $this->db->insert($this->table, $data);
+		$this->db->order_by('user_id', 'DESC');
+		$user = $this->db->get($this->table, '1')->result_array();
+		foreach($user as $list):
+			$data = [
+				'user_id' => $list['user_id'],
+				'group_id' => $id_group
+			];
+		endforeach;
+		$this->db->insert('users_groups', $data);
 		return $create;
 	}
 

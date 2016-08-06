@@ -6,14 +6,15 @@ class HakAkses extends Admin_Controller {
 	{
 		parent::__construct();
 		$this->load->model('m_hakakses','m_hakakses');
-	}
+    }
 
 	public function index()
 	{
 		$data = [
 			'title' => 'Data Hak Akses',
 			'content' => 'admin/hakakses/index',
-			'hakakses' => $this->m_hakakses->read()
+			'hakakses' => $this->m_hakakses->read(),
+            'grup' => $this->m_hakakses->read_groups()
 		];
 		$this->load->view($this->template, $data);
 	}
@@ -47,10 +48,12 @@ class HakAkses extends Admin_Controller {
                     'last_name' => $this->input->post('lname'),
                     'email' => $this->input->post('email'),
                     'phone' => $this->input->post('phone'),
-                    'id_group' => $this->input->post('level')
                 ];
+                
+                $user_id = $this->input->post('userid');
+                $id_group = $this->input->post('level');
 
-                if($this->m_hakakses->create($data)){
+                if($this->m_hakakses->create($data, $user_id, $id_group)) {
                 	$this->session->set_flashdata("operation", "success");
                     $this->session->set_flashdata("message", "<strong>Pengurus</strong> berhasil ditambah");
                     redirect('admin/hakakses');

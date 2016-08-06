@@ -3,11 +3,6 @@
 		<div class="panel panel-warning">
 	  <!-- Default panel contents -->
 	  <div class="panel-heading"><h4>Daftar Pengguna & Hak Akses</h4></div>
-
-	  <!-- Table -->
-	  <!-- alert -->
-                
-
                 <!-- alert -->
                 <?php if($this->session->flashdata('operation') != NULL){ ?>
                     <div class="alert alert-<?=$this->session->flashdata('operation')?>" role="alert">
@@ -15,7 +10,6 @@
                     </div>
                 <?php } ?>
                 <!-- end of alert -->
-
 	  <table class="table">
 		  <thead>
 	        <tr>
@@ -38,7 +32,7 @@
                             <td>
                                <button class="btn btn-warning btn-xs">Detail</button>
                                <button class="btn btn-success btn-xs">Ganti</button>
-                               <button class="btn btn-danger btn-xs btn-delete" onclick="confirmDeleteModal('<?=$list["id"]?>')">
+                               <button class="btn btn-danger btn-xs btn-delete" onclick="confirmDeleteModal('<?=$list["user_id"]?>')">
                                Hapus</button>
                             </td>
                         </tr>
@@ -61,7 +55,7 @@
                 <!-- end of alert -->
 		    <form action="<?=site_url('admin/hakAkses/create')?>" method="post" class="form-horizontal" enctype="multipart/form-data" role="form">
 				<fieldset>
-
+				<input id="userid" maxlength="30" name="userid" type="text" value="<?= set_value('user_id') ?>" hidden/>
 				<!-- Text input-->
 				<div class="form-group">
 				  <label class="col-md-4 control-label" for="username">Username</label>  
@@ -132,8 +126,9 @@
 				  <label class="col-md-4 control-label" for="level">Level</label>
 				  <div class="col-md-8">
 				    <select id="level" name="level" class="form-control">
-				      <option value="1">Administrator</option>
-				      <option value="2">Operator</option>
+				      <?php foreach($grup as $list): ?>
+				      <option value="<?=$list['id']?>"><?=$list['description']?></option>
+				      <?php endforeach; ?>
 				    </select>
 				  </div>
 				</div>
