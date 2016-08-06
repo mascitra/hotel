@@ -37,7 +37,9 @@
                             <td>
                                <button class="btn btn-warning btn-xs">Detail</button>
                                <button class="btn btn-success btn-xs">Ganti</button>
+                               <?php if ($list['id_guest_group'] > 1) { ?>
                                <button class="btn btn-danger btn-xs btn-delete" onclick="confirmDeleteModal('<?=$list["id_guest_group"]?>')">Hapus</button>
+                               <?php } ?>
                             </td>
                         </tr>
 
