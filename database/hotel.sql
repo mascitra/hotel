@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 05 Agu 2016 pada 16.38
+-- Generation Time: 06 Agu 2016 pada 16.21
 -- Versi Server: 10.1.13-MariaDB
 -- PHP Version: 5.6.21
 
@@ -177,8 +177,7 @@ CREATE TABLE `groups` (
 
 INSERT INTO `groups` (`id`, `name`, `description`) VALUES
 (1, 'admin', 'Administrator'),
-(2, 'members', 'General User'),
-(3, 'woho', 'whoo');
+(2, 'members', 'General User');
 
 -- --------------------------------------------------------
 
@@ -199,7 +198,7 @@ CREATE TABLE `guest` (
   `provinsi` varchar(100) NOT NULL,
   `negara` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `kode_grup` varchar(5) NOT NULL
+  `kode_grup` varchar(5) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -220,18 +219,19 @@ INSERT INTO `guest` (`no_ktp`, `nama_depan`, `nama_belakang`, `id`, `email`, `te
 --
 
 CREATE TABLE `guest_group` (
+  `id_guest_group` int(2) NOT NULL,
   `kode` varchar(5) NOT NULL,
-  `nama` varchar(30) NOT NULL,
-  `diskon` tinyint(3) NOT NULL
+  `nama` varchar(50) NOT NULL,
+  `diskon` tinyint(3) NOT NULL,
+  `status_guest_group` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data untuk tabel `guest_group`
 --
 
-INSERT INTO `guest_group` (`kode`, `nama`, `diskon`) VALUES
-('U0134', 'Umum', 0),
-('CO193', 'Corporate', 10);
+INSERT INTO `guest_group` (`id_guest_group`, `kode`, `nama`, `diskon`, `status_guest_group`) VALUES
+(1, 'U0134', 'Umum', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -241,7 +241,7 @@ INSERT INTO `guest_group` (`kode`, `nama`, `diskon`) VALUES
 
 CREATE TABLE `login_attempts` (
   `id` int(11) UNSIGNED NOT NULL,
-  `ip_address` varbinary(16) NOT NULL,
+  `ip_address` varchar(15) NOT NULL,
   `login` varchar(100) NOT NULL,
   `time` int(11) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -459,11 +459,11 @@ INSERT INTO `slides` (`slide_id`, `slide_title`, `slide_desc`, `slide_image`, `s
 --
 
 CREATE TABLE `users` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `ip_address` varbinary(16) NOT NULL,
-  `username` varchar(100) NOT NULL,
-  `password` varchar(80) NOT NULL,
-  `salt` varchar(40) DEFAULT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `salt` varchar(255) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `activation_code` varchar(40) DEFAULT NULL,
   `forgotten_password_code` varchar(40) DEFAULT NULL,
@@ -474,20 +474,36 @@ CREATE TABLE `users` (
   `active` tinyint(1) UNSIGNED DEFAULT NULL,
   `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
-  `prefix_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `id_group` int(2) NOT NULL
+  `company` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data untuk tabel `users`
 --
 
-INSERT INTO `users` (`id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `prefix_name`, `phone`, `id_group`) VALUES
-(1, 0x7f000001, 'administrator', '59beecdf7fc966e2f17fd8f65a4a9aeb09d4a3d4', '9462e8eee0', 'admin@admin.com', '', NULL, NULL, '9d029802e28cd9c768e8e62277c0df49ec65c48c', 1268889823, 1470055837, 1, 'Admin123451', 'istrator123', '1', '0123', 1),
-(2, 0x7f000001, 'ada ada', '071d22528b64ac57ebef8a5ae31429c255bd275c', NULL, 'adalah@adalah.com', NULL, '07865ad17f3d62cc274cb0ff12b5bcbd92c4c0ae', 1390190514, '2bec130b71689249115110f3c083aadc9f68cb86', 1390119961, 1390270992, 1, 'ada', 'ada', 'ada', '12', 2),
-(20, 0x7f000001, 'admin12 istrator123', '436b27f9a1df6e77eb11134a41c739bb573f2106', NULL, 'admin@gie-art.com', NULL, NULL, NULL, NULL, 1390445688, 1390446780, 1, 'Admin12', 'istrator123', '0', '121234', 3),
-(21, 0x00000000000000000000000000000001, 'rizki herdatullah', '0fd2244e68eae89eb9bc93cf2559bf3200c46e55', NULL, 'rizkiherda@gmail.com', NULL, NULL, NULL, NULL, 1470041431, 1470055798, 1, 'Rizki', 'Herdatullah', '0', '8980129366', 1);
+INSERT INTO `users` (`user_id`, `ip_address`, `username`, `password`, `salt`, `email`, `activation_code`, `forgotten_password_code`, `forgotten_password_time`, `remember_code`, `created_on`, `last_login`, `active`, `first_name`, `last_name`, `company`, `phone`) VALUES
+(1, '127.0.0.1', 'administrator', '$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36', '', 'admin@admin.com', '', NULL, NULL, NULL, 1268889823, 1268889823, 1, 'Admin', 'istrator', 'ADMIN', '0');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users_groups`
+--
+
+CREATE TABLE `users_groups` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `group_id` mediumint(8) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data untuk tabel `users_groups`
+--
+
+INSERT INTO `users_groups` (`id`, `user_id`, `group_id`) VALUES
+(1, 1, 1),
+(2, 1, 2);
 
 --
 -- Indexes for dumped tables
@@ -528,6 +544,12 @@ ALTER TABLE `groups`
 --
 ALTER TABLE `guest`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `guest_group`
+--
+ALTER TABLE `guest_group`
+  ADD PRIMARY KEY (`id_guest_group`);
 
 --
 -- Indexes for table `login_attempts`
@@ -587,7 +609,16 @@ ALTER TABLE `slides`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `users_groups`
+--
+ALTER TABLE `users_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uc_users_groups` (`user_id`,`group_id`),
+  ADD KEY `fk_users_groups_users1_idx` (`user_id`),
+  ADD KEY `fk_users_groups_groups1_idx` (`group_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -617,12 +648,17 @@ ALTER TABLE `foto_produk`
 -- AUTO_INCREMENT for table `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` mediumint(8) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `guest`
 --
 ALTER TABLE `guest`
   MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+--
+-- AUTO_INCREMENT for table `guest_group`
+--
+ALTER TABLE `guest_group`
+  MODIFY `id_guest_group` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `login_attempts`
 --
@@ -672,7 +708,23 @@ ALTER TABLE `slides`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `user_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `users_groups`
+--
+ALTER TABLE `users_groups`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `users_groups`
+--
+ALTER TABLE `users_groups`
+  ADD CONSTRAINT `fk_users_groups_groups1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_users_groups_users1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
